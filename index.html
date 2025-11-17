@@ -931,6 +931,7 @@
     const API_BASE =
       "https://pl5xaf0r80.execute-api.us-east-1.amazonaws.com/prod";
     const API_GET_CHALLENGES = `${API_BASE}/getgeneratedchallenges`;
+     const API_SAVE_CHALLENGE = `${API_BASE}/savegeneratedchallenge`;
 
     const normalizeChallengeDays = (challengeDays) => {
       // challengeDays can be:
@@ -1182,6 +1183,52 @@
         setView("editor");
       };
 
+      const handleSaveChallenge = async () => {
+          try {
+            const payload = {
+              challengeId: meta.challengeId,
+              challengeMeta: meta,
+              // Use same shape as your Days JSON preview: { challengeId, challengeDays: [...] }
+              challengeDays: {
+                challengeId: meta.challengeId,
+                challengeDays: days
+              }
+            };
+
+            const res = await fetch(API_SAVE_CHALLENGE, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify(payload)
+            });
+
+            if (!res.ok) {
+              throw new Error(`HTTP ${res.status}`);
+            }
+
+            const data = await res.json(); // not strictly needed, but nice if you log it
+
+            // Update local list so home screen shows latest challenge
+            setChallenges((prev) => {
+              const savedChallenge = {
+                challengeId: meta.challengeId,
+                challengeMeta: meta,
+                challengeDays: payload.challengeDays
+              };
+              const others = prev.filter(
+                (c) => c.challengeId !== meta.challengeId
+              );
+              return [...others, savedChallenge];
+            });
+
+            alert("Challenge saved successfully ✅");
+          } catch (err) {
+            console.error("Save failed", err);
+            alert("Failed to save challenge. Please try again.");
+          }
+        };
+
       return (
         <div className="min-h-screen bg-slate-100">
           <header className="border-b border-slate-200 bg-white">
@@ -1201,28 +1248,31 @@
               </div>
 
               <div className="flex items-center space-x-2 text-[11px] text-slate-500">
-                {view === "editor" && (
-                  <>
-                    <span>
-                      Challenge ID:{" "}
-                      <span className="font-mono text-slate-700">
-                        {meta.challengeId}
+                  {view === "editor" && (
+                    <>
+                      <span>
+                        Challenge ID:{" "}
+                        <span className="font-mono text-slate-700">
+                          {meta.challengeId}
+                        </span>
                       </span>
-                    </span>
-                    <PillButton
-                      variant="ghost"
-                      onClick={() => setView("home")}
-                    >
-                      ← Back to Challenges
+                      <PillButton onClick={handleSaveChallenge}>
+                        Save
+                      </PillButton>
+                      <PillButton
+                        variant="ghost"
+                        onClick={() => setView("home")}
+                      >
+                        ← Back to Challenges
+                      </PillButton>
+                    </>
+                  )}
+                  {view === "home" && (
+                    <PillButton onClick={handleNewChallenge}>
+                      + New Challenge
                     </PillButton>
-                  </>
-                )}
-                {view === "home" && (
-                  <PillButton onClick={handleNewChallenge}>
-                    + New Challenge
-                  </PillButton>
-                )}
-              </div>
+                  )}
+                </div>
             </div>
           </header>
 
