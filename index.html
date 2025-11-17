@@ -1,997 +1,1241 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Gratitude Challenge Builder</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- Tailwind CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- React + ReactDOM -->
-    <script
-      crossorigin
-      src="https://unpkg.com/react@18/umd/react.development.js"
-    ></script>
-    <script
-      crossorigin
-      src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"
-    ></script>
-    <!-- Babel for JSX in browser -->
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  </head>
-  <body class="bg-slate-100">
-    <div id="root"></div>
 
-    <script type="text/babel">
-      const { useState, useMemo } = React;
+<head>
+  <meta charset="UTF-8" />
+  <title>Gratitude Challenge Builder</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- React + ReactDOM -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <!-- Babel for JSX in browser -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
 
-      // ---------- Helpers ----------
-      const padDay = (n) => String(n).padStart(2, "0");
+<body class="bg-slate-100">
+  <div id="root"></div>
 
-      const defaultChallengeMeta = {
-        challengeId: "ChallengeSample2025",
-        title: "Sample Challenge",
-        subtitle: "30 days of reflection and growth.",
-        entityDescriptor: "Sample Challenge 2025",
-        duration: 30,
-        startDate: "2025-01-01",
-        showDate: "2024-12-25",
-        hideDate: "2025-02-01",
-        showAsNewlyLaunched: true,
-        description: "30 days of reflection and growth.",
-        order: 1,
-        takersCount: 0,
-        preEnrolledCount: 0,
-        surveyUrl: "",
-        shareMessage:
-          "Join me in this challenge 🌿 30 days of reflection and growth. https://links.gratefulness.me/Challenges",
-        thumbnailIllusUrl:
-          "https://gratitude-app-content.s3.us-east-1.amazonaws.com/challenges/sample/thumbnail.png",
-        bannerIllusUrl:
-          "https://gratitude-app-content.s3.us-east-1.amazonaws.com/challenges/sample/banner.png",
-        cardIllusUrl:
-          "https://gratitude-app-content.s3.us-east-1.amazonaws.com/challenges/sample/card.png",
-        recommendIllusUrl: "",
-        challengeGroupId: "",
-        challengeGroupOrder: 0,
-        instructions: [
-          "🌿 Take a small moment each day",
-          "💭 Reflect with honesty and care",
-          "🕊️ Be gentle with yourself as you write",
-          "⏳ One day at a time"
-        ],
-        carouselCards: [
-          {
-            title: "Opening Reflections",
-            subtitle: "Begin with gentle awareness of your inner world.",
-            bgColor: "#E9CFE3",
-            illusUrl:
-              "https://gratitude-app-content.s3.amazonaws.com/challenges/carousels/carousel_heart.png"
-          },
-          {
-            title: "Daily Moments",
-            subtitle: "Notice small shifts, feelings, and insights each day.",
-            bgColor: "#FFEDE1",
-            illusUrl:
-              "https://gratitude-app-content.s3.amazonaws.com/challenges/carousels/carousel_smile.png"
-          },
-          {
-            title: "Deepening Practice",
-            subtitle:
-              "Explore themes of care, gratitude, and gentle self-understanding.",
-            bgColor: "#D0F4DE",
-            illusUrl:
-              "https://gratitude-app-content.s3.amazonaws.com/challenges/carousels/carousel_planning.png"
-          }
+  <script type="text/babel">
+    const { useState, useMemo } = React;
+
+    // ---------- Helpers ----------
+    const padDay = (n) => String(n).padStart(2, "0");
+
+    const defaultChallengeMeta = {
+      challengeId: "ChallengeSample2025",
+      title: "Sample Challenge",
+      subtitle: "30 days of reflection and growth.",
+      entityDescriptor: "Sample Challenge 2025",
+      duration: 30,
+      startDate: "2025-01-01",
+      showDate: "2024-12-25",
+      hideDate: "2025-02-01",
+      showAsNewlyLaunched: true,
+      description: "30 days of reflection and growth.",
+      order: 1,
+      takersCount: 0,
+      preEnrolledCount: 0,
+      surveyUrl: "",
+      shareMessage:
+        "Join me in this challenge 🌿 30 days of reflection and growth. https://links.gratefulness.me/Challenges",
+      thumbnailIllusUrl:
+        "https://gratitude-app-content.s3.us-east-1.amazonaws.com/challenges/sample/thumbnail.png",
+      bannerIllusUrl:
+        "https://gratitude-app-content.s3.us-east-1.amazonaws.com/challenges/sample/banner.png",
+      cardIllusUrl:
+        "https://gratitude-app-content.s3.us-east-1.amazonaws.com/challenges/sample/card.png",
+      recommendIllusUrl: "",
+      challengeGroupId: "",
+      challengeGroupOrder: 0,
+      instructions: [
+        "🌿 Take a small moment each day",
+        "💭 Reflect with honesty and care",
+        "🕊️ Be gentle with yourself as you write",
+        "⏳ One day at a time"
+      ],
+      carouselCards: [
+        {
+          title: "Opening Reflections",
+          subtitle: "Begin with gentle awareness of your inner world.",
+          bgColor: "#E9CFE3",
+          illusUrl:
+            "https://gratitude-app-content.s3.amazonaws.com/challenges/carousels/carousel_heart.png"
+        },
+        {
+          title: "Daily Moments",
+          subtitle: "Notice small shifts, feelings, and insights each day.",
+          bgColor: "#FFEDE1",
+          illusUrl:
+            "https://gratitude-app-content.s3.amazonaws.com/challenges/carousels/carousel_smile.png"
+        },
+        {
+          title: "Deepening Practice",
+          subtitle:
+            "Explore themes of care, gratitude, and gentle self-understanding.",
+          bgColor: "#D0F4DE",
+          illusUrl:
+            "https://gratitude-app-content.s3.amazonaws.com/challenges/carousels/carousel_planning.png"
+        }
+      ]
+    };
+
+    const createEmptyDay = (challengeId, index) => {
+      const dayNumber = index + 1;
+      return {
+        captionText: `Day ${dayNumber}. Write a short description for this day here.`,
+        challengeId,
+        courtesy: "",
+        dayId: `Day ${padDay(dayNumber)}`,
+        daySinceJoining: index,
+        examplesHeader: "Example sentences:",
+        extraHint: "",
+        pointersHeader: "",
+        primaryColor: "#FAFFD4",
+        promptHeader: "Prompt for the day",
+        promptHeaderText:
+          "Write the gentle, reflective prompt you want users to respond to.",
+        showInvite: false,
+        showSurvey: false,
+        subTitle: "Day subtitle",
+        title: `Day ${dayNumber}`,
+        pointers: [],
+        examples: [
+          "This is an example journal entry for this day. It shows the tone and style you would like users to follow.",
+          "You can write longer examples that feel personal, warm, and reflective, giving users a sense of how to respond.",
+          "Each example can explore one angle of the prompt, so users feel more guided and supported while writing."
         ]
       };
+    };
 
-      const createEmptyDay = (challengeId, index) => {
-        const dayNumber = index + 1;
-        return {
-          captionText: `Day ${dayNumber}. Write a short description for this day here.`,
-          challengeId,
-          courtesy: "",
-          dayId: `Day ${padDay(dayNumber)}`,
-          daySinceJoining: index,
-          examplesHeader: "Example sentences:",
-          extraHint: "",
-          pointersHeader: "",
-          primaryColor: "#FAFFD4",
-          promptHeader: "Prompt for the day",
-          promptHeaderText:
-            "Write the gentle, reflective prompt you want users to respond to.",
-          showInvite: false,
-          showSurvey: false,
-          subTitle: "Day subtitle",
-          title: `Day ${dayNumber}`,
-          pointers: [],
-          examples: [
-            "This is an example journal entry for this day. It shows the tone and style you would like users to follow.",
-            "You can write longer examples that feel personal, warm, and reflective, giving users a sense of how to respond.",
-            "Each example can explore one angle of the prompt, so users feel more guided and supported while writing."
-          ]
-        };
-      };
-
-      const generateDays = (challengeId, duration) => {
-        return Array.from({ length: duration }, (_, i) =>
-          createEmptyDay(challengeId, i)
-        );
-      };
-
-      // ---------- Small UI Components ----------
-      const SectionTitle = ({ children }) => (
-        <h2 className="text-sm font-semibold text-slate-700 uppercase tracking-wide mb-2">
-          {children}
-        </h2>
+    const generateDays = (challengeId, duration) => {
+      return Array.from({ length: duration }, (_, i) =>
+        createEmptyDay(challengeId, i)
       );
+    };
 
-      const Label = ({ children, htmlFor }) => (
-        <label
-          htmlFor={htmlFor}
-          className="block text-xs font-medium text-slate-600 mb-1"
-        >
-          {children}
-        </label>
-      );
+    // ---------- Small UI Components ----------
+    const SectionTitle = ({ children }) => (
+      <h2 className="text-sm font-semibold text-slate-700 uppercase tracking-wide mb-2">
+        {children}
+      </h2>
+    );
 
-      const TextInput = ({
-        id,
-        value,
-        onChange,
-        placeholder,
-        type = "text"
-      }) => (
-        <input
-          id={id}
-          type={type}
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          placeholder={placeholder}
-          className="w-full rounded-md border border-slate-200 bg-white px-2.5 py-1.5 text-sm text-slate-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-300 focus:border-sky-300"
-        />
-      );
+    const Label = ({ children, htmlFor }) => (
+      <label
+        htmlFor={htmlFor}
+        className="block text-xs font-medium text-slate-600 mb-1"
+      >
+        {children}
+      </label>
+    );
 
-      const TextArea = ({ id, value, onChange, rows = 3, placeholder }) => (
-        <textarea
-          id={id}
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          rows={rows}
-          placeholder={placeholder}
-          className="w-full rounded-md border border-slate-200 bg-white px-2.5 py-1.5 text-sm text-slate-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-300 focus:border-sky-300 resize-y"
-        />
-      );
+    const TextInput = ({
+      id,
+      value,
+      onChange,
+      placeholder,
+      type = "text"
+    }) => (
+      <input
+        id={id}
+        type={type}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder={placeholder}
+        className="w-full rounded-md border border-slate-200 bg-white px-2.5 py-1.5 text-sm text-slate-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-300 focus:border-sky-300"
+      />
+    );
 
-      const Toggle = ({ label, checked, onChange }) => (
-        <button
-          type="button"
-          onClick={() => onChange(!checked)}
-          className={`inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-medium ${
-            checked
-              ? "bg-sky-600 border-sky-600 text-white"
-              : "bg-slate-100 border-slate-300 text-slate-600"
+    const TextArea = ({ id, value, onChange, rows = 3, placeholder }) => (
+      <textarea
+        id={id}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        rows={rows}
+        placeholder={placeholder}
+        className="w-full rounded-md border border-slate-200 bg-white px-2.5 py-1.5 text-sm text-slate-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-300 focus:border-sky-300 resize-y"
+      />
+    );
+
+    const Toggle = ({ label, checked, onChange }) => (
+      <button
+        type="button"
+        onClick={() => onChange(!checked)}
+        className={`inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-medium ${checked
+            ? "bg-sky-600 border-sky-600 text-white"
+            : "bg-slate-100 border-slate-300 text-slate-600"
           }`}
-        >
-          <span
-            className={`mr-1 inline-block h-2 w-2 rounded-full ${
-              checked ? "bg-white" : "bg-slate-400"
+      >
+        <span
+          className={`mr-1 inline-block h-2 w-2 rounded-full ${checked ? "bg-white" : "bg-slate-400"
             }`}
-          ></span>
-          {label}
-        </button>
-      );
+        ></span>
+        {label}
+      </button>
+    );
 
-      const PillButton = ({ children, onClick, variant = "primary" }) => {
-        const base =
-          "inline-flex items-center justify-center rounded-full px-3 py-1 text-xs font-medium";
-        const styles =
-          variant === "primary"
-            ? "bg-sky-600 text-white hover:bg-sky-700"
-            : variant === "ghost"
+    const PillButton = ({ children, onClick, variant = "primary" }) => {
+      const base =
+        "inline-flex items-center justify-center rounded-full px-3 py-1 text-xs font-medium";
+      const styles =
+        variant === "primary"
+          ? "bg-sky-600 text-white hover:bg-sky-700"
+          : variant === "ghost"
             ? "bg-transparent text-slate-600 hover:bg-slate-100"
             : "bg-slate-200 text-slate-700 hover:bg-slate-300";
-        return (
-          <button type="button" onClick={onClick} className={`${base} ${styles}`}>
-            {children}
-          </button>
-        );
+      return (
+        <button type="button" onClick={onClick} className={`${base} ${styles}`}>
+          {children}
+        </button>
+      );
+    };
+
+    const PRIMARY_COLORS = [
+      "#FAFFD4",
+      "#D8E1FF",
+      "#FFEDE1",
+      "#DDFFF8",
+      "#FFDCE2",
+      "#E1FAFF",
+      "#F1FFDB",
+      "#C2E9CF",
+      "#E9CFE3",
+      "#FDFFE4",
+      "#FFE2D1",
+      "#FFD2FB",
+      "#D0F4DE",
+      "#BEF1F6",
+      "#FEF2F2"
+    ];
+
+    const ColorPicker = ({ value, onChange }) => {
+      return (
+        <div className="space-y-1">
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] text-slate-500">
+              Selected: <span className="font-mono">{value}</span>
+            </span>
+            <div
+              className="h-5 w-5 rounded-full border border-slate-300"
+              style={{ backgroundColor: value }}
+            />
+          </div>
+
+          <div className="rounded-xl bg-slate-50 p-2">
+            <div className="grid grid-cols-8 gap-2">
+              {PRIMARY_COLORS.map((color) => {
+                const isSelected = color === value;
+                return (
+                  <button
+                    key={color}
+                    type="button"
+                    onClick={() => onChange(color)}
+                    className={`h-7 w-7 rounded-full border transition-transform ${isSelected
+                      ? "border-sky-600 ring-2 ring-sky-300 scale-105"
+                      : "border-slate-200 hover:scale-105"
+                      }`}
+                    style={{ backgroundColor: color }}
+                  >
+                    {isSelected && (
+                      <span className="block h-full w-full rounded-full border border-white/70" />
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      );
+    };
+
+    // ---------- Meta Editor ----------
+    const ChallengeMetaEditor = ({ meta, onChange, onGenerateDays }) => {
+      const handleChangeField = (field, value) => {
+        const updated = { ...meta, [field]: value };
+        onChange(updated);
       };
 
-      const PRIMARY_COLORS = [
-          "#FAFFD4",
-          "#D8E1FF",
-          "#FFEDE1",
-          "#DDFFF8",
-          "#FFDCE2",
-          "#E1FAFF",
-          "#F1FFDB",
-          "#C2E9CF",
-          "#E9CFE3",
-          "#FDFFE4",
-          "#FFE2D1",
-          "#FFD2FB",
-          "#D0F4DE",
-          "#BEF1F6",
-          "#FEF2F2"
-        ];
+      const handleInstructionChange = (index, value) => {
+        const instructions = [...meta.instructions];
+        instructions[index] = value;
+        onChange({ ...meta, instructions });
+      };
 
-        const ColorPicker = ({ value, onChange }) => {
-            return (
-              <div className="space-y-1">
-                <div className="flex items-center justify-between">
-                  <span className="text-[11px] text-slate-500">
-                    Selected: <span className="font-mono">{value}</span>
-                  </span>
-                  <div
-                    className="h-5 w-5 rounded-full border border-slate-300"
-                    style={{ backgroundColor: value }}
-                  />
-                </div>
+      const addInstruction = () => {
+        onChange({
+          ...meta,
+          instructions: [...meta.instructions, ""]
+        });
+      };
 
-                <div className="rounded-xl bg-slate-50 p-2">
-                  <div className="grid grid-cols-8 gap-2">
-                    {PRIMARY_COLORS.map((color) => {
-                      const isSelected = color === value;
-                      return (
-                        <button
-                          key={color}
-                          type="button"
-                          onClick={() => onChange(color)}
-                          className={`h-7 w-7 rounded-full border transition-transform ${isSelected
-                              ? "border-sky-600 ring-2 ring-sky-300 scale-105"
-                              : "border-slate-200 hover:scale-105"
-                            }`}
-                          style={{ backgroundColor: color }}
-                        >
-                          {isSelected && (
-                            <span className="block h-full w-full rounded-full border border-white/70" />
-                          )}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
+      const removeInstruction = (index) => {
+        const instructions = meta.instructions.filter((_, i) => i !== index);
+        onChange({ ...meta, instructions });
+      };
+
+      const handleCarouselChange = (index, field, value) => {
+        const cards = [...meta.carouselCards];
+        cards[index] = { ...cards[index], [field]: value };
+        onChange({ ...meta, carouselCards: cards });
+      };
+
+      const addCarouselCard = () => {
+        onChange({
+          ...meta,
+          carouselCards: [
+            ...meta.carouselCards,
+            {
+              title: "New Card",
+              subtitle: "Short description",
+              bgColor: "#E1FAFF",
+              illusUrl:
+                "https://gratitude-app-content.s3.amazonaws.com/challenges/carousels/carousel_smile.png"
+            }
+          ]
+        });
+      };
+
+      const removeCarouselCard = (index) => {
+        const cards = meta.carouselCards.filter((_, i) => i !== index);
+        onChange({ ...meta, carouselCards: cards });
+      };
+
+      return (
+        <div className="h-full overflow-y-auto space-y-6 pr-2">
+          <div>
+            <SectionTitle>Challenge Info</SectionTitle>
+            <div className="space-y-3">
+              <div>
+                <Label htmlFor="challengeId">Challenge ID</Label>
+                <TextInput
+                  id="challengeId"
+                  value={meta.challengeId}
+                  onChange={(v) => handleChangeField("challengeId", v)}
+                  placeholder="ChallengeDecember2025"
+                />
               </div>
-            );
-          };
-
-      // ---------- Meta Editor ----------
-      const ChallengeMetaEditor = ({ meta, onChange, onGenerateDays }) => {
-        const handleChangeField = (field, value) => {
-          const updated = { ...meta, [field]: value };
-          onChange(updated);
-        };
-
-        const handleInstructionChange = (index, value) => {
-          const instructions = [...meta.instructions];
-          instructions[index] = value;
-          onChange({ ...meta, instructions });
-        };
-
-        const addInstruction = () => {
-          onChange({
-            ...meta,
-            instructions: [...meta.instructions, ""]
-          });
-        };
-
-        const removeInstruction = (index) => {
-          const instructions = meta.instructions.filter((_, i) => i !== index);
-          onChange({ ...meta, instructions });
-        };
-
-        const handleCarouselChange = (index, field, value) => {
-          const cards = [...meta.carouselCards];
-          cards[index] = { ...cards[index], [field]: value };
-          onChange({ ...meta, carouselCards: cards });
-        };
-
-        const addCarouselCard = () => {
-          onChange({
-            ...meta,
-            carouselCards: [
-              ...meta.carouselCards,
-              {
-                title: "New Card",
-                subtitle: "Short description",
-                bgColor: "#E1FAFF",
-                illusUrl:
-                  "https://gratitude-app-content.s3.amazonaws.com/challenges/carousels/carousel_smile.png"
-              }
-            ]
-          });
-        };
-
-        const removeCarouselCard = (index) => {
-          const cards = meta.carouselCards.filter((_, i) => i !== index);
-          onChange({ ...meta, carouselCards: cards });
-        };
-
-        return (
-          <div className="h-full overflow-y-auto space-y-6 pr-2">
-            <div>
-              <SectionTitle>Challenge Info</SectionTitle>
-              <div className="space-y-3">
-                <div>
-                  <Label htmlFor="challengeId">Challenge ID</Label>
-                  <TextInput
-                    id="challengeId"
-                    value={meta.challengeId}
-                    onChange={(v) => handleChangeField("challengeId", v)}
-                    placeholder="ChallengeDecember2025"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="title">Title</Label>
-                  <TextInput
-                    id="title"
-                    value={meta.title}
-                    onChange={(v) => handleChangeField("title", v)}
-                    placeholder="December Reflection Challenge"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="subtitle">Subtitle</Label>
-                  <TextInput
-                    id="subtitle"
-                    value={meta.subtitle}
-                    onChange={(v) => handleChangeField("subtitle", v)}
-                    placeholder="30 days of reflection and gentle release."
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="entityDescriptor">Entity Descriptor</Label>
-                  <TextInput
-                    id="entityDescriptor"
-                    value={meta.entityDescriptor}
-                    onChange={(v) =>
-                      handleChangeField("entityDescriptor", v)
-                    }
-                    placeholder="December Challenge 2025"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="description">Description</Label>
-                  <TextArea
-                    id="description"
-                    rows={3}
-                    value={meta.description}
-                    onChange={(v) => handleChangeField("description", v)}
-                  />
-                </div>
+              <div>
+                <Label htmlFor="title">Title</Label>
+                <TextInput
+                  id="title"
+                  value={meta.title}
+                  onChange={(v) => handleChangeField("title", v)}
+                  placeholder="December Reflection Challenge"
+                />
               </div>
-            </div>
-
-            <div>
-              <SectionTitle>Dates & Duration</SectionTitle>
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <Label htmlFor="duration">Duration (days)</Label>
-                  <TextInput
-                    id="duration"
-                    type="number"
-                    value={meta.duration}
-                    onChange={(v) =>
-                      handleChangeField("duration", Number(v || 0))
-                    }
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="order">Order</Label>
-                  <TextInput
-                    id="order"
-                    type="number"
-                    value={meta.order}
-                    onChange={(v) => handleChangeField("order", Number(v || 0))}
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="startDate">Start Date</Label>
-                  <TextInput
-                    id="startDate"
-                    type="date"
-                    value={meta.startDate}
-                    onChange={(v) => handleChangeField("startDate", v)}
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="showDate">Show Date</Label>
-                  <TextInput
-                    id="showDate"
-                    type="date"
-                    value={meta.showDate}
-                    onChange={(v) => handleChangeField("showDate", v)}
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="hideDate">Hide Date</Label>
-                  <TextInput
-                    id="hideDate"
-                    type="date"
-                    value={meta.hideDate}
-                    onChange={(v) => handleChangeField("hideDate", v)}
-                  />
-                </div>
+              <div>
+                <Label htmlFor="subtitle">Subtitle</Label>
+                <TextInput
+                  id="subtitle"
+                  value={meta.subtitle}
+                  onChange={(v) => handleChangeField("subtitle", v)}
+                  placeholder="30 days of reflection and gentle release."
+                />
               </div>
-              <div className="mt-3 flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <Toggle
-                    label="Show as newly launched"
-                    checked={meta.showAsNewlyLaunched}
-                    onChange={(v) =>
-                      handleChangeField("showAsNewlyLaunched", v)
-                    }
-                  />
-                </div>
-                <PillButton
-                  onClick={() =>
-                    onGenerateDays(meta.challengeId, meta.duration)
+              <div>
+                <Label htmlFor="entityDescriptor">Entity Descriptor</Label>
+                <TextInput
+                  id="entityDescriptor"
+                  value={meta.entityDescriptor}
+                  onChange={(v) =>
+                    handleChangeField("entityDescriptor", v)
                   }
+                  placeholder="December Challenge 2025"
+                />
+              </div>
+              <div>
+                <Label htmlFor="description">Description</Label>
+                <TextArea
+                  id="description"
+                  rows={3}
+                  value={meta.description}
+                  onChange={(v) => handleChangeField("description", v)}
+                />
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <SectionTitle>Dates & Duration</SectionTitle>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <Label htmlFor="duration">Duration (days)</Label>
+                <TextInput
+                  id="duration"
+                  type="number"
+                  value={meta.duration}
+                  onChange={(v) =>
+                    handleChangeField("duration", Number(v || 0))
+                  }
+                />
+              </div>
+              <div>
+                <Label htmlFor="order">Order</Label>
+                <TextInput
+                  id="order"
+                  type="number"
+                  value={meta.order}
+                  onChange={(v) => handleChangeField("order", Number(v || 0))}
+                />
+              </div>
+              <div>
+                <Label htmlFor="startDate">Start Date</Label>
+                <TextInput
+                  id="startDate"
+                  type="date"
+                  value={meta.startDate}
+                  onChange={(v) => handleChangeField("startDate", v)}
+                />
+              </div>
+              <div>
+                <Label htmlFor="showDate">Show Date</Label>
+                <TextInput
+                  id="showDate"
+                  type="date"
+                  value={meta.showDate}
+                  onChange={(v) => handleChangeField("showDate", v)}
+                />
+              </div>
+              <div>
+                <Label htmlFor="hideDate">Hide Date</Label>
+                <TextInput
+                  id="hideDate"
+                  type="date"
+                  value={meta.hideDate}
+                  onChange={(v) => handleChangeField("hideDate", v)}
+                />
+              </div>
+            </div>
+            <div className="mt-3 flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <Toggle
+                  label="Show as newly launched"
+                  checked={meta.showAsNewlyLaunched}
+                  onChange={(v) =>
+                    handleChangeField("showAsNewlyLaunched", v)
+                  }
+                />
+              </div>
+              <PillButton
+                onClick={() =>
+                  onGenerateDays(meta.challengeId, meta.duration)
+                }
+              >
+                Generate {meta.duration} days
+              </PillButton>
+            </div>
+          </div>
+
+          <div>
+            <SectionTitle>Share & Links</SectionTitle>
+            <div className="space-y-3">
+              <div>
+                <Label htmlFor="shareMessage">Share Message</Label>
+                <TextArea
+                  id="shareMessage"
+                  rows={3}
+                  value={meta.shareMessage}
+                  onChange={(v) => handleChangeField("shareMessage", v)}
+                />
+              </div>
+              <div>
+                <Label htmlFor="surveyUrl">Survey URL</Label>
+                <TextInput
+                  id="surveyUrl"
+                  value={meta.surveyUrl}
+                  onChange={(v) => handleChangeField("surveyUrl", v)}
+                  placeholder="https://..."
+                />
+              </div>
+              <div>
+                <Label htmlFor="thumbnailIllusUrl">
+                  Thumbnail Illustration URL
+                </Label>
+                <TextInput
+                  id="thumbnailIllusUrl"
+                  value={meta.thumbnailIllusUrl}
+                  onChange={(v) =>
+                    handleChangeField("thumbnailIllusUrl", v)
+                  }
+                />
+              </div>
+              <div>
+                <Label htmlFor="bannerIllusUrl">
+                  Banner Illustration URL
+                </Label>
+                <TextInput
+                  id="bannerIllusUrl"
+                  value={meta.bannerIllusUrl}
+                  onChange={(v) => handleChangeField("bannerIllusUrl", v)}
+                />
+              </div>
+              <div>
+                <Label htmlFor="cardIllusUrl">Card Illustration URL</Label>
+                <TextInput
+                  id="cardIllusUrl"
+                  value={meta.cardIllusUrl}
+                  onChange={(v) => handleChangeField("cardIllusUrl", v)}
+                />
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <SectionTitle>Instructions</SectionTitle>
+            <div className="space-y-2">
+              {meta.instructions.map((inst, idx) => (
+                <div key={idx} className="flex items-start space-x-2">
+                  <span className="mt-1 text-xs text-slate-400">
+                    {idx + 1}.
+                  </span>
+                  <div className="flex-1">
+                    <TextInput
+                      value={inst}
+                      onChange={(v) => handleInstructionChange(idx, v)}
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => removeInstruction(idx)}
+                    className="mt-1 text-xs text-slate-400 hover:text-red-500"
+                  >
+                    ✕
+                  </button>
+                </div>
+              ))}
+              <PillButton variant="ghost" onClick={addInstruction}>
+                + Add instruction
+              </PillButton>
+            </div>
+          </div>
+
+          <div>
+            <SectionTitle>Carousel Cards</SectionTitle>
+            <div className="space-y-3">
+              {meta.carouselCards.map((card, idx) => (
+                <div
+                  key={idx}
+                  className="rounded-xl border border-slate-200 bg-white p-3 shadow-sm"
                 >
-                  Generate {meta.duration} days
-                </PillButton>
-              </div>
-            </div>
-
-            <div>
-              <SectionTitle>Share & Links</SectionTitle>
-              <div className="space-y-3">
-                <div>
-                  <Label htmlFor="shareMessage">Share Message</Label>
-                  <TextArea
-                    id="shareMessage"
-                    rows={3}
-                    value={meta.shareMessage}
-                    onChange={(v) => handleChangeField("shareMessage", v)}
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="surveyUrl">Survey URL</Label>
-                  <TextInput
-                    id="surveyUrl"
-                    value={meta.surveyUrl}
-                    onChange={(v) => handleChangeField("surveyUrl", v)}
-                    placeholder="https://..."
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="thumbnailIllusUrl">
-                    Thumbnail Illustration URL
-                  </Label>
-                  <TextInput
-                    id="thumbnailIllusUrl"
-                    value={meta.thumbnailIllusUrl}
-                    onChange={(v) =>
-                      handleChangeField("thumbnailIllusUrl", v)
-                    }
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="bannerIllusUrl">
-                    Banner Illustration URL
-                  </Label>
-                  <TextInput
-                    id="bannerIllusUrl"
-                    value={meta.bannerIllusUrl}
-                    onChange={(v) => handleChangeField("bannerIllusUrl", v)}
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="cardIllusUrl">Card Illustration URL</Label>
-                  <TextInput
-                    id="cardIllusUrl"
-                    value={meta.cardIllusUrl}
-                    onChange={(v) => handleChangeField("cardIllusUrl", v)}
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div>
-              <SectionTitle>Instructions</SectionTitle>
-              <div className="space-y-2">
-                {meta.instructions.map((inst, idx) => (
-                  <div key={idx} className="flex items-start space-x-2">
-                    <span className="mt-1 text-xs text-slate-400">
-                      {idx + 1}.
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-xs font-semibold text-slate-500">
+                      Card {idx + 1}
                     </span>
-                    <div className="flex-1">
-                      <TextInput
-                        value={inst}
-                        onChange={(v) => handleInstructionChange(idx, v)}
-                      />
-                    </div>
                     <button
                       type="button"
-                      onClick={() => removeInstruction(idx)}
-                      className="mt-1 text-xs text-slate-400 hover:text-red-500"
+                      onClick={() => removeCarouselCard(idx)}
+                      className="text-xs text-slate-400 hover:text-red-500"
                     >
-                      ✕
+                      Remove
                     </button>
                   </div>
-                ))}
-                <PillButton variant="ghost" onClick={addInstruction}>
-                  + Add instruction
-                </PillButton>
-              </div>
-            </div>
-
-            <div>
-              <SectionTitle>Carousel Cards</SectionTitle>
-              <div className="space-y-3">
-                {meta.carouselCards.map((card, idx) => (
-                  <div
-                    key={idx}
-                    className="rounded-xl border border-slate-200 bg-white p-3 shadow-sm"
-                  >
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-xs font-semibold text-slate-500">
-                        Card {idx + 1}
-                      </span>
-                      <button
-                        type="button"
-                        onClick={() => removeCarouselCard(idx)}
-                        className="text-xs text-slate-400 hover:text-red-500"
-                      >
-                        Remove
-                      </button>
+                  <div className="space-y-2">
+                    <div>
+                      <Label>Title</Label>
+                      <TextInput
+                        value={card.title}
+                        onChange={(v) =>
+                          handleCarouselChange(idx, "title", v)
+                        }
+                      />
                     </div>
-                    <div className="space-y-2">
+                    <div>
+                      <Label>Subtitle</Label>
+                      <TextArea
+                        rows={2}
+                        value={card.subtitle}
+                        onChange={(v) =>
+                          handleCarouselChange(idx, "subtitle", v)
+                        }
+                      />
+                    </div>
+                    <div className="grid grid-cols-2 gap-2">
                       <div>
-                        <Label>Title</Label>
+                        <Label>Background Color</Label>
                         <TextInput
-                          value={card.title}
+                          value={card.bgColor}
                           onChange={(v) =>
-                            handleCarouselChange(idx, "title", v)
+                            handleCarouselChange(idx, "bgColor", v)
                           }
                         />
                       </div>
                       <div>
-                        <Label>Subtitle</Label>
-                        <TextArea
-                          rows={2}
-                          value={card.subtitle}
+                        <Label>Illustration URL</Label>
+                        <TextInput
+                          value={card.illusUrl}
                           onChange={(v) =>
-                            handleCarouselChange(idx, "subtitle", v)
+                            handleCarouselChange(idx, "illusUrl", v)
                           }
                         />
                       </div>
-                      <div className="grid grid-cols-2 gap-2">
-                        <div>
-                          <Label>Background Color</Label>
-                          <TextInput
-                            value={card.bgColor}
-                            onChange={(v) =>
-                              handleCarouselChange(idx, "bgColor", v)
-                            }
-                          />
-                        </div>
-                        <div>
-                          <Label>Illustration URL</Label>
-                          <TextInput
-                            value={card.illusUrl}
-                            onChange={(v) =>
-                              handleCarouselChange(idx, "illusUrl", v)
-                            }
-                          />
+                    </div>
+                  </div>
+                </div>
+              ))}
+              <PillButton variant="ghost" onClick={addCarouselCard}>
+                + Add carousel card
+              </PillButton>
+            </div>
+          </div>
+        </div>
+      );
+    };
+
+    // ---------- Day List ----------
+    const DayList = ({ days, selectedIndex, onSelect, onAddDay, duration }) => {
+      return (
+        <div className="space-y-3 h-full overflow-y-auto pr-2">
+          <div className="flex items-center justify-between">
+            <SectionTitle>Days</SectionTitle>
+            <span className="text-xs text-slate-500">
+              {days.length} / {duration}
+            </span>
+          </div>
+          <div className="space-y-1">
+            {days.map((day, index) => (
+              <button
+                key={day.dayId || index}
+                type="button"
+                onClick={() => onSelect(index)}
+                className={`flex w-full items-center justify-between rounded-lg border px-2.5 py-1.5 text-left text-xs ${selectedIndex === index
+                    ? "border-sky-500 bg-sky-50 text-sky-800"
+                    : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
+                  }`}
+              >
+                <div>
+                  <div className="font-semibold">
+                    {day.title || `Day ${index + 1}`}
+                  </div>
+                  <div className="text-[11px] text-slate-500 truncate max-w-[180px]">
+                    {day.subTitle || "No subtitle yet"}
+                  </div>
+                </div>
+                <span className="text-[11px] text-slate-400">
+                  {day.dayId || `Day ${padDay(index + 1)}`}
+                </span>
+              </button>
+            ))}
+          </div>
+          {days.length < duration && (
+            <div className="pt-2">
+              <PillButton variant="ghost" onClick={onAddDay}>
+                + Add day {days.length + 1}
+              </PillButton>
+            </div>
+          )}
+        </div>
+      );
+    };
+
+    // ---------- Day Editor ----------
+    const DayEditor = ({ day, index, onChange }) => {
+      if (!day) {
+        return (
+          <div className="h-full flex items-center justify-center text-sm text-slate-400">
+            Select or create a day to start editing.
+          </div>
+        );
+      }
+
+      const updateField = (field, value) => {
+        const updated = { ...day, [field]: value };
+        if (field === "title") {
+          // no automatic changes
+        }
+        onChange(updated);
+      };
+
+      const updateExample = (i, value) => {
+        const examples = [...day.examples];
+        examples[i] = value;
+        onChange({ ...day, examples });
+      };
+
+      const addExample = () => {
+        onChange({
+          ...day,
+          examples: [
+            ...day.examples,
+            "Write another example entry for this day's prompt here."
+          ]
+        });
+      };
+
+      const removeExample = (i) => {
+        const examples = day.examples.filter((_, idx) => idx !== i);
+        onChange({ ...day, examples });
+      };
+
+      const updatePointer = (i, value) => {
+        const pointers = [...day.pointers];
+        pointers[i] = value;
+        onChange({ ...day, pointers });
+      };
+
+      const addPointer = () => {
+        onChange({
+          ...day,
+          pointers: [...day.pointers, "Helpful hint or reflection pointer."]
+        });
+      };
+
+      const removePointer = (i) => {
+        const pointers = day.pointers.filter((_, idx) => idx !== i);
+        onChange({ ...day, pointers });
+      };
+
+      return (
+        <div className="h-full overflow-y-auto space-y-5 pr-2">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-xs uppercase tracking-wide text-slate-400">
+                Editing
+              </p>
+              <h1 className="text-lg font-semibold text-slate-800">
+                {day.title}{" "}
+                <span className="text-xs font-normal text-slate-400">
+                  ({day.dayId})
+                </span>
+              </h1>
+            </div>
+            <span className="text-xs text-slate-400">
+              Day index: {index + 1}
+            </span>
+          </div>
+
+          <div>
+            <SectionTitle>Basic Info</SectionTitle>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <Label htmlFor="dayTitle">Title</Label>
+                <TextInput
+                  id="dayTitle"
+                  value={day.title}
+                  onChange={(v) => updateField("title", v)}
+                />
+              </div>
+              <div>
+                <Label htmlFor="daySubTitle">Subtitle</Label>
+                <TextInput
+                  id="daySubTitle"
+                  value={day.subTitle}
+                  onChange={(v) => updateField("subTitle", v)}
+                />
+              </div>
+              <div>
+                <Label htmlFor="primaryColor">Primary Color</Label>
+                <ColorPicker
+                  value={day.primaryColor}
+                  onChange={(color) => updateField("primaryColor", color)}
+                />
+              </div>
+              <div>
+                <Label htmlFor="daySinceJoining">Day Since Joining</Label>
+                <TextInput
+                  id="daySinceJoining"
+                  type="number"
+                  value={day.daySinceJoining}
+                  onChange={(v) =>
+                    updateField("daySinceJoining", Number(v || 0))
+                  }
+                />
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <SectionTitle>Caption</SectionTitle>
+            <TextArea
+              id="captionText"
+              rows={5}
+              value={day.captionText}
+              onChange={(v) => updateField("captionText", v)}
+            />
+          </div>
+
+          <div>
+            <SectionTitle>Prompt</SectionTitle>
+            <div className="space-y-2">
+              <div>
+                <Label htmlFor="promptHeader">Prompt Header</Label>
+                <TextInput
+                  id="promptHeader"
+                  value={day.promptHeader}
+                  onChange={(v) => updateField("promptHeader", v)}
+                />
+              </div>
+              <div>
+                <Label htmlFor="promptHeaderText">Prompt Text</Label>
+                <TextArea
+                  id="promptHeaderText"
+                  rows={3}
+                  value={day.promptHeaderText}
+                  onChange={(v) => updateField("promptHeaderText", v)}
+                />
+              </div>
+              <div className="flex items-center gap-2">
+                <Toggle
+                  label="Show Invite"
+                  checked={day.showInvite}
+                  onChange={(v) => updateField("showInvite", v)}
+                />
+                <Toggle
+                  label="Show Survey"
+                  checked={day.showSurvey}
+                  onChange={(v) => updateField("showSurvey", v)}
+                />
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <SectionTitle>Examples</SectionTitle>
+            <p className="text-[11px] text-slate-500 mb-2">
+              These sample responses guide the tone and depth for this day.
+            </p>
+            <div className="space-y-3">
+              {day.examples.map((ex, i) => (
+                <div
+                  key={i}
+                  className="rounded-lg border border-slate-200 bg-white p-2.5 shadow-sm"
+                >
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-[11px] font-medium text-slate-500">
+                      Example {i + 1}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => removeExample(i)}
+                      className="text-[11px] text-slate-400 hover:text-red-500"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                  <TextArea
+                    rows={3}
+                    value={ex}
+                    onChange={(v) => updateExample(i, v)}
+                  />
+                </div>
+              ))}
+              <PillButton variant="ghost" onClick={addExample}>
+                + Add example
+              </PillButton>
+            </div>
+          </div>
+
+          <div>
+            <SectionTitle>Pointers (Optional)</SectionTitle>
+            <p className="text-[11px] text-slate-500 mb-2">
+              Short hints or reminders users can see before writing.
+            </p>
+            <div className="space-y-2">
+              {day.pointers.map((p, i) => (
+                <div key={i} className="flex items-start space-x-2">
+                  <span className="mt-1 text-xs text-slate-400">{i + 1}.</span>
+                  <div className="flex-1">
+                    <TextInput
+                      value={p}
+                      onChange={(v) => updatePointer(i, v)}
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => removePointer(i)}
+                    className="mt-1 text-xs text-slate-400 hover:text-red-500"
+                  >
+                    ✕
+                  </button>
+                </div>
+              ))}
+              <PillButton variant="ghost" onClick={addPointer}>
+                + Add pointer
+              </PillButton>
+            </div>
+          </div>
+        </div>
+      );
+    };
+
+    // ---------- JSON Preview ----------
+    const JsonPreview = ({ meta, days }) => {
+      const mainJson = useMemo(
+        () => JSON.stringify(meta, null, 2),
+        [meta]
+      );
+      const daysJson = useMemo(
+        () =>
+          JSON.stringify(
+            {
+              challengeId: meta.challengeId,
+              challengeDays: days
+            },
+            null,
+            2
+          ),
+        [meta.challengeId, days]
+      );
+
+      const copyToClipboard = (text) => {
+        if (navigator && navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).catch(() => { });
+        }
+      };
+
+      const [tab, setTab] = useState("meta");
+
+      return (
+        <div className="h-full flex flex-col">
+          <div className="flex items-center justify-between mb-2">
+            <SectionTitle>JSON Preview</SectionTitle>
+            <div className="space-x-1">
+              <PillButton
+                variant={tab === "meta" ? "primary" : "ghost"}
+                onClick={() => setTab("meta")}
+              >
+                Meta
+              </PillButton>
+              <PillButton
+                variant={tab === "days" ? "primary" : "ghost"}
+                onClick={() => setTab("days")}
+              >
+                Days
+              </PillButton>
+            </div>
+          </div>
+          <div className="flex items-center justify-between mb-2">
+            <p className="text-[11px] text-slate-500">
+              Copy and paste into your JSON config.
+            </p>
+            <PillButton
+              variant="ghost"
+              onClick={() =>
+                copyToClipboard(tab === "meta" ? mainJson : daysJson)
+              }
+            >
+              Copy {tab === "meta" ? "meta" : "days"} JSON
+            </PillButton>
+          </div>
+          <div className="flex-1 overflow-hidden">
+            <pre className="h-full w-full overflow-auto rounded-xl bg-slate-900 p-3 text-[11px] text-slate-100 shadow-inner">
+              {tab === "meta" ? mainJson : daysJson}
+            </pre>
+          </div>
+        </div>
+      );
+    };
+
+    // ---------- API + Home Screen Helpers ----------
+    const API_BASE =
+      "https://pl5xaf0r80.execute-api.us-east-1.amazonaws.com/prod";
+    const API_GET_CHALLENGES = `${API_BASE}/getgeneratedchallenges`;
+
+    const normalizeChallengeDays = (challengeDays) => {
+      // challengeDays can be:
+      // - an array of days
+      // - { challengeId, challengeDays: [...] }
+      if (Array.isArray(challengeDays)) return challengeDays;
+      if (
+        challengeDays &&
+        Array.isArray(challengeDays.challengeDays)
+      ) {
+        return challengeDays.challengeDays;
+      }
+      return [];
+    };
+
+    const createNewChallengeMeta = () => {
+      const id = `Challenge_${Date.now()}`;
+      return {
+        ...defaultChallengeMeta,
+        challengeId: id,
+        title: "New Challenge",
+        entityDescriptor: id
+      };
+    };
+
+    const exportChallengeJson = (challenge) => {
+      const data = {
+        challengeMeta: challenge.challengeMeta,
+        challengeDays: challenge.challengeDays
+      };
+
+      const blob = new Blob([JSON.stringify(data, null, 2)], {
+        type: "application/json"
+      });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${challenge.challengeId || "challenge"}.json`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    };
+
+    const HomeScreen = ({
+      challenges,
+      loading,
+      error,
+      onNewChallenge,
+      onEditChallenge
+    }) => {
+      return (
+        <div className="max-w-5xl mx-auto h-[calc(100vh-112px)] flex flex-col">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h2 className="text-base font-semibold text-slate-800">
+                Your Generated Challenges
+              </h2>
+              <p className="text-sm text-slate-500">
+                Select a challenge to edit or export, or start a new one.
+              </p>
+            </div>
+            <PillButton onClick={onNewChallenge}>+ New Challenge</PillButton>
+          </div>
+
+          {loading && (
+            <div className="flex-1 flex items-center justify-center text-sm text-slate-500">
+              Loading challenges...
+            </div>
+          )}
+
+          {!loading && error && (
+            <div className="mb-4 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+              Failed to load challenges: {error}
+            </div>
+          )}
+
+          {!loading && !error && challenges.length === 0 && (
+            <div className="flex-1 flex flex-col items-center justify-center text-sm text-slate-500">
+              <p>No challenges found yet.</p>
+              <button
+                type="button"
+                onClick={onNewChallenge}
+                className="mt-3 text-xs font-medium text-sky-600 hover:underline"
+              >
+                Create your first challenge →
+              </button>
+            </div>
+          )}
+
+          {!loading && !error && challenges.length > 0 && (
+            <div className="flex-1 overflow-y-auto">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pb-4">
+                {challenges.map((ch) => {
+                  const meta = ch.challengeMeta || {};
+                  const days = normalizeChallengeDays(ch.challengeDays);
+                  const title =
+                    meta.title || ch.challengeId || "Untitled Challenge";
+                  const duration = meta.duration || days.length || 0;
+                  const startDate = meta.startDate || "—";
+
+                  return (
+                    <div
+                      key={ch.challengeId}
+                      className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm flex flex-col justify-between"
+                    >
+                      <div>
+                        <h3 className="text-sm font-semibold text-slate-800 mb-1">
+                          {title}
+                        </h3>
+                        <p className="text-xs text-slate-500 mb-3 break-all">
+                          ID:{" "}
+                          <span className="font-mono text-slate-600">
+                            {ch.challengeId}
+                          </span>
+                        </p>
+                        <div className="flex flex-wrap gap-2 text-[11px] text-slate-600">
+                          <span className="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5">
+                            Duration:{" "}
+                            <span className="ml-1 font-medium">
+                              {duration} days
+                            </span>
+                          </span>
+                          <span className="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5">
+                            Start:{" "}
+                            <span className="ml-1 font-medium">
+                              {startDate}
+                            </span>
+                          </span>
                         </div>
                       </div>
+
+                      <div className="mt-4 flex items-center justify-between">
+                        <PillButton onClick={() => onEditChallenge(ch)}>
+                          Edit
+                        </PillButton>
+                        <PillButton
+                          variant="ghost"
+                          onClick={() => exportChallengeJson(ch)}
+                        >
+                          Export JSON
+                        </PillButton>
+                      </div>
                     </div>
-                  </div>
-                ))}
-                <PillButton variant="ghost" onClick={addCarouselCard}>
-                  + Add carousel card
-                </PillButton>
+                  );
+                })}
               </div>
             </div>
-          </div>
-        );
+          )}
+        </div>
+      );
+    };
+
+    // ---------- Root App ----------
+    const App = () => {
+      const [meta, setMeta] = useState(defaultChallengeMeta);
+      const [days, setDays] = useState(
+        generateDays(
+          defaultChallengeMeta.challengeId,
+          defaultChallengeMeta.duration
+        )
+      );
+      const [selectedDayIndex, setSelectedDayIndex] = useState(0);
+
+      const [view, setView] = useState("home"); // "home" | "editor"
+      const [challenges, setChallenges] = useState([]);
+      const [loadingChallenges, setLoadingChallenges] = useState(false);
+      const [challengesError, setChallengesError] = useState("");
+
+      // Load challenges list on first render
+      React.useEffect(() => {
+        const fetchChallenges = async () => {
+          try {
+            setLoadingChallenges(true);
+            setChallengesError("");
+            const res = await fetch(API_GET_CHALLENGES);
+            if (!res.ok) {
+              throw new Error(`HTTP ${res.status}`);
+            }
+            const data = await res.json();
+            setChallenges(data.challenges || []);
+          } catch (err) {
+            setChallengesError(err.message || "Unknown error");
+          } finally {
+            setLoadingChallenges(false);
+          }
+        };
+
+        fetchChallenges();
+      }, []);
+
+      const handleGenerateDays = (challengeId, duration) => {
+        const newDays = generateDays(challengeId, duration);
+        setDays(newDays);
+        setSelectedDayIndex(0);
       };
 
-      // ---------- Day List ----------
-      const DayList = ({ days, selectedIndex, onSelect, onAddDay, duration }) => {
-        return (
-          <div className="space-y-3 h-full overflow-y-auto pr-2">
-            <div className="flex items-center justify-between">
-              <SectionTitle>Days</SectionTitle>
-              <span className="text-xs text-slate-500">
-                {days.length} / {duration}
-              </span>
-            </div>
-            <div className="space-y-1">
-              {days.map((day, index) => (
-                <button
-                  key={day.dayId || index}
-                  type="button"
-                  onClick={() => onSelect(index)}
-                  className={`flex w-full items-center justify-between rounded-lg border px-2.5 py-1.5 text-left text-xs ${
-                    selectedIndex === index
-                      ? "border-sky-500 bg-sky-50 text-sky-800"
-                      : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
-                  }`}
-                >
-                  <div>
-                    <div className="font-semibold">
-                      {day.title || `Day ${index + 1}`}
-                    </div>
-                    <div className="text-[11px] text-slate-500 truncate max-w-[180px]">
-                      {day.subTitle || "No subtitle yet"}
-                    </div>
-                  </div>
-                  <span className="text-[11px] text-slate-400">
-                    {day.dayId || `Day ${padDay(index + 1)}`}
-                  </span>
-                </button>
-              ))}
-            </div>
-            {days.length < duration && (
-              <div className="pt-2">
-                <PillButton variant="ghost" onClick={onAddDay}>
-                  + Add day {days.length + 1}
-                </PillButton>
-              </div>
-            )}
-          </div>
-        );
+      const handleAddDay = () => {
+        const idx = days.length;
+        const newDay = createEmptyDay(meta.challengeId, idx);
+        setDays([...days, newDay]);
+        setSelectedDayIndex(idx);
       };
 
-      // ---------- Day Editor ----------
-      const DayEditor = ({ day, index, onChange }) => {
-        if (!day) {
-          return (
-            <div className="h-full flex items-center justify-center text-sm text-slate-400">
-              Select or create a day to start editing.
-            </div>
+      const handleUpdateDay = (updatedDay) => {
+        const newDays = [...days];
+        newDays[selectedDayIndex] = {
+          ...updatedDay,
+          challengeId: meta.challengeId,
+          dayId: `Day ${padDay(selectedDayIndex + 1)}`
+        };
+        setDays(newDays);
+      };
+
+      const handleNewChallenge = () => {
+        const newMeta = createNewChallengeMeta();
+        setMeta(newMeta);
+        setDays(
+          generateDays(
+            newMeta.challengeId,
+            newMeta.duration || defaultChallengeMeta.duration
+          )
+        );
+        setSelectedDayIndex(0);
+        setView("editor");
+      };
+
+      const handleEditExistingChallenge = (challenge) => {
+        const loadedMeta = challenge.challengeMeta || createNewChallengeMeta();
+        const loadedDays = normalizeChallengeDays(challenge.challengeDays);
+
+        setMeta({
+          ...loadedMeta,
+          challengeId: challenge.challengeId || loadedMeta.challengeId
+        });
+
+        if (loadedDays.length > 0) {
+          setDays(loadedDays);
+        } else {
+          setDays(
+            generateDays(
+              challenge.challengeId || loadedMeta.challengeId,
+              loadedMeta.duration || defaultChallengeMeta.duration
+            )
           );
         }
 
-        const updateField = (field, value) => {
-          const updated = { ...day, [field]: value };
-          if (field === "title") {
-            // no automatic changes
-          }
-          onChange(updated);
-        };
+        setSelectedDayIndex(0);
+        setView("editor");
+      };
 
-        const updateExample = (i, value) => {
-          const examples = [...day.examples];
-          examples[i] = value;
-          onChange({ ...day, examples });
-        };
-
-        const addExample = () => {
-          onChange({
-            ...day,
-            examples: [
-              ...day.examples,
-              "Write another example entry for this day's prompt here."
-            ]
-          });
-        };
-
-        const removeExample = (i) => {
-          const examples = day.examples.filter((_, idx) => idx !== i);
-          onChange({ ...day, examples });
-        };
-
-        const updatePointer = (i, value) => {
-          const pointers = [...day.pointers];
-          pointers[i] = value;
-          onChange({ ...day, pointers });
-        };
-
-        const addPointer = () => {
-          onChange({
-            ...day,
-            pointers: [...day.pointers, "Helpful hint or reflection pointer."]
-          });
-        };
-
-        const removePointer = (i) => {
-          const pointers = day.pointers.filter((_, idx) => idx !== i);
-          onChange({ ...day, pointers });
-        };
-
-        return (
-          <div className="h-full overflow-y-auto space-y-5 pr-2">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs uppercase tracking-wide text-slate-400">
-                  Editing
-                </p>
-                <h1 className="text-lg font-semibold text-slate-800">
-                  {day.title}{" "}
-                  <span className="text-xs font-normal text-slate-400">
-                    ({day.dayId})
-                  </span>
-                </h1>
-              </div>
-              <span className="text-xs text-slate-400">
-                Day index: {index + 1}
-              </span>
-            </div>
-
-            <div>
-              <SectionTitle>Basic Info</SectionTitle>
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <Label htmlFor="dayTitle">Title</Label>
-                  <TextInput
-                    id="dayTitle"
-                    value={day.title}
-                    onChange={(v) => updateField("title", v)}
-                  />
+      return (
+        <div className="min-h-screen bg-slate-100">
+          <header className="border-b border-slate-200 bg-white">
+            <div className="mx-auto max-w-7xl px-4 py-3 flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <div className="h-8 w-8 rounded-xl bg-sky-500 text-white flex items-center justify-center text-sm font-bold">
+                  G
                 </div>
                 <div>
-                  <Label htmlFor="daySubTitle">Subtitle</Label>
-                  <TextInput
-                    id="daySubTitle"
-                    value={day.subTitle}
-                    onChange={(v) => updateField("subTitle", v)}
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="primaryColor">Primary Color</Label>
-                  <ColorPicker
-                    value={day.primaryColor}
-                    onChange={(color) => updateField("primaryColor", color)}
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="daySinceJoining">Day Since Joining</Label>
-                  <TextInput
-                    id="daySinceJoining"
-                    type="number"
-                    value={day.daySinceJoining}
-                    onChange={(v) =>
-                      updateField("daySinceJoining", Number(v || 0))
-                    }
-                  />
+                  <h1 className="text-sm font-semibold text-slate-800">
+                    Gratitude Challenge Builder
+                  </h1>
+                  <p className="text-[11px] text-slate-500">
+                    Create and export JSON for in-app challenges.
+                  </p>
                 </div>
               </div>
-            </div>
 
-            <div>
-              <SectionTitle>Caption</SectionTitle>
-              <TextArea
-                id="captionText"
-                rows={5}
-                value={day.captionText}
-                onChange={(v) => updateField("captionText", v)}
-              />
-            </div>
-
-            <div>
-              <SectionTitle>Prompt</SectionTitle>
-              <div className="space-y-2">
-                <div>
-                  <Label htmlFor="promptHeader">Prompt Header</Label>
-                  <TextInput
-                    id="promptHeader"
-                    value={day.promptHeader}
-                    onChange={(v) => updateField("promptHeader", v)}
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="promptHeaderText">Prompt Text</Label>
-                  <TextArea
-                    id="promptHeaderText"
-                    rows={3}
-                    value={day.promptHeaderText}
-                    onChange={(v) => updateField("promptHeaderText", v)}
-                  />
-                </div>
-                <div className="flex items-center gap-2">
-                  <Toggle
-                    label="Show Invite"
-                    checked={day.showInvite}
-                    onChange={(v) => updateField("showInvite", v)}
-                  />
-                  <Toggle
-                    label="Show Survey"
-                    checked={day.showSurvey}
-                    onChange={(v) => updateField("showSurvey", v)}
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div>
-              <SectionTitle>Examples</SectionTitle>
-              <p className="text-[11px] text-slate-500 mb-2">
-                These sample responses guide the tone and depth for this day.
-              </p>
-              <div className="space-y-3">
-                {day.examples.map((ex, i) => (
-                  <div
-                    key={i}
-                    className="rounded-lg border border-slate-200 bg-white p-2.5 shadow-sm"
-                  >
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="text-[11px] font-medium text-slate-500">
-                        Example {i + 1}
+              <div className="flex items-center space-x-2 text-[11px] text-slate-500">
+                {view === "editor" && (
+                  <>
+                    <span>
+                      Challenge ID:{" "}
+                      <span className="font-mono text-slate-700">
+                        {meta.challengeId}
                       </span>
-                      <button
-                        type="button"
-                        onClick={() => removeExample(i)}
-                        className="text-[11px] text-slate-400 hover:text-red-500"
-                      >
-                        Remove
-                      </button>
-                    </div>
-                    <TextArea
-                      rows={3}
-                      value={ex}
-                      onChange={(v) => updateExample(i, v)}
-                    />
-                  </div>
-                ))}
-                <PillButton variant="ghost" onClick={addExample}>
-                  + Add example
-                </PillButton>
-              </div>
-            </div>
-
-            <div>
-              <SectionTitle>Pointers (Optional)</SectionTitle>
-              <p className="text-[11px] text-slate-500 mb-2">
-                Short hints or reminders users can see before writing.
-              </p>
-              <div className="space-y-2">
-                {day.pointers.map((p, i) => (
-                  <div key={i} className="flex items-start space-x-2">
-                    <span className="mt-1 text-xs text-slate-400">{i + 1}.</span>
-                    <div className="flex-1">
-                      <TextInput
-                        value={p}
-                        onChange={(v) => updatePointer(i, v)}
-                      />
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => removePointer(i)}
-                      className="mt-1 text-xs text-slate-400 hover:text-red-500"
+                    </span>
+                    <PillButton
+                      variant="ghost"
+                      onClick={() => setView("home")}
                     >
-                      ✕
-                    </button>
-                  </div>
-                ))}
-                <PillButton variant="ghost" onClick={addPointer}>
-                  + Add pointer
-                </PillButton>
+                      ← Back to Challenges
+                    </PillButton>
+                  </>
+                )}
+                {view === "home" && (
+                  <PillButton onClick={handleNewChallenge}>
+                    + New Challenge
+                  </PillButton>
+                )}
               </div>
             </div>
-          </div>
-        );
-      };
+          </header>
 
-      // ---------- JSON Preview ----------
-      const JsonPreview = ({ meta, days }) => {
-        const mainJson = useMemo(
-          () => JSON.stringify(meta, null, 2),
-          [meta]
-        );
-        const daysJson = useMemo(
-          () =>
-            JSON.stringify(
-              {
-                challengeId: meta.challengeId,
-                challengeDays: days
-              },
-              null,
-              2
-            ),
-          [meta.challengeId, days]
-        );
-
-        const copyToClipboard = (text) => {
-          if (navigator && navigator.clipboard && navigator.clipboard.writeText) {
-            navigator.clipboard.writeText(text).catch(() => {});
-          }
-        };
-
-        const [tab, setTab] = useState("meta");
-
-        return (
-          <div className="h-full flex flex-col">
-            <div className="flex items-center justify-between mb-2">
-              <SectionTitle>JSON Preview</SectionTitle>
-              <div className="space-x-1">
-                <PillButton
-                  variant={tab === "meta" ? "primary" : "ghost"}
-                  onClick={() => setTab("meta")}
-                >
-                  Meta
-                </PillButton>
-                <PillButton
-                  variant={tab === "days" ? "primary" : "ghost"}
-                  onClick={() => setTab("days")}
-                >
-                  Days
-                </PillButton>
-              </div>
-            </div>
-            <div className="flex items-center justify-between mb-2">
-              <p className="text-[11px] text-slate-500">
-                Copy and paste into your JSON config.
-              </p>
-              <PillButton
-                variant="ghost"
-                onClick={() =>
-                  copyToClipboard(tab === "meta" ? mainJson : daysJson)
-                }
-              >
-                Copy {tab === "meta" ? "meta" : "days"} JSON
-              </PillButton>
-            </div>
-            <div className="flex-1 overflow-hidden">
-              <pre className="h-full w-full overflow-auto rounded-xl bg-slate-900 p-3 text-[11px] text-slate-100 shadow-inner">
-{tab === "meta" ? mainJson : daysJson}
-              </pre>
-            </div>
-          </div>
-        );
-      };
-
-      // ---------- Root App ----------
-      const App = () => {
-        const [meta, setMeta] = useState(defaultChallengeMeta);
-        const [days, setDays] = useState(
-          generateDays(defaultChallengeMeta.challengeId, defaultChallengeMeta.duration)
-        );
-        const [selectedDayIndex, setSelectedDayIndex] = useState(0);
-
-        const handleGenerateDays = (challengeId, duration) => {
-          const newDays = generateDays(challengeId, duration);
-          setDays(newDays);
-          setSelectedDayIndex(0);
-        };
-
-        const handleAddDay = () => {
-          const idx = days.length;
-          const newDay = createEmptyDay(meta.challengeId, idx);
-          setDays([...days, newDay]);
-          setSelectedDayIndex(idx);
-        };
-
-        const handleUpdateDay = (updatedDay) => {
-          const newDays = [...days];
-          newDays[selectedDayIndex] = {
-            ...updatedDay,
-            challengeId: meta.challengeId,
-            dayId: `Day ${padDay(selectedDayIndex + 1)}`
-          };
-          setDays(newDays);
-        };
-
-        return (
-          <div className="min-h-screen bg-slate-100">
-            <header className="border-b border-slate-200 bg-white">
-              <div className="mx-auto max-w-7xl px-4 py-3 flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <div className="h-8 w-8 rounded-xl bg-sky-500 text-white flex items-center justify-center text-sm font-bold">
-                    G
-                  </div>
-                  <div>
-                    <h1 className="text-sm font-semibold text-slate-800">
-                      Gratitude Challenge Builder
-                    </h1>
-                    <p className="text-[11px] text-slate-500">
-                      Create and export JSON for in-app challenges.
-                    </p>
-                  </div>
-                </div>
-                <div className="text-[11px] text-slate-500">
-                  Challenge ID:{" "}
-                  <span className="font-mono text-slate-700">
-                    {meta.challengeId}
-                  </span>
-                </div>
-              </div>
-            </header>
-
-            <main className="mx-auto max-w-7xl px-4 py-4">
+          <main className="mx-auto max-w-7xl px-4 py-4">
+            {view === "home" ? (
+              <HomeScreen
+                challenges={challenges}
+                loading={loadingChallenges}
+                error={challengesError}
+                onNewChallenge={handleNewChallenge}
+                onEditChallenge={handleEditExistingChallenge}
+              />
+            ) : (
               <div className="grid grid-cols-12 gap-4 h-[calc(100vh-96px)]">
                 {/* Left: Meta */}
                 <section className="col-span-3 rounded-2xl bg-white p-3 shadow-sm border border-slate-200 flex flex-col">
@@ -1029,13 +1273,15 @@
                   <JsonPreview meta={meta} days={days} />
                 </section>
               </div>
-            </main>
-          </div>
-        );
-      };
+            )}
+          </main>
+        </div>
+      );
+    };
 
-      const root = ReactDOM.createRoot(document.getElementById("root"));
-      root.render(<App />);
-    </script>
-  </body>
+    const root = ReactDOM.createRoot(document.getElementById("root"));
+    root.render(<App />);
+  </script>
+</body>
+
 </html>
