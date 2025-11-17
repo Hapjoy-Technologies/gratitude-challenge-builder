@@ -202,13 +202,6 @@
       const ChallengeMetaEditor = ({ meta, onChange, onGenerateDays }) => {
         const handleChangeField = (field, value) => {
           const updated = { ...meta, [field]: value };
-          // sync some fields automatically
-          if (field === "title") {
-            updated.entityDescriptor = `${value}`;
-          }
-          if (field === "challengeId") {
-            // no automatic linking here; we handle in generator
-          }
           onChange(updated);
         };
 
