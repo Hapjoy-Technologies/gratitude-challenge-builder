@@ -217,44 +217,44 @@
         ];
 
         const ColorPicker = ({ value, onChange }) => {
-          return (
-            <div className="space-y-1">
-              <div className="flex items-center justify-between">
-                <span className="text-[11px] text-slate-500">
-                  Selected:{" "}
-                  <span className="font-mono">
-                    {value}
+            return (
+              <div className="space-y-1">
+                <div className="flex items-center justify-between">
+                  <span className="text-[11px] text-slate-500">
+                    Selected: <span className="font-mono">{value}</span>
                   </span>
-                </span>
-                <div
-                  className="h-5 w-5 rounded-full border border-slate-300"
-                  style={{ backgroundColor: value }}
-                />
+                  <div
+                    className="h-5 w-5 rounded-full border border-slate-300"
+                    style={{ backgroundColor: value }}
+                  />
+                </div>
+
+                <div className="rounded-xl bg-slate-50 p-2">
+                  <div className="grid grid-cols-8 gap-2">
+                    {PRIMARY_COLORS.map((color) => {
+                      const isSelected = color === value;
+                      return (
+                        <button
+                          key={color}
+                          type="button"
+                          onClick={() => onChange(color)}
+                          className={`h-7 w-7 rounded-full border transition-transform ${isSelected
+                              ? "border-sky-600 ring-2 ring-sky-300 scale-105"
+                              : "border-slate-200 hover:scale-105"
+                            }`}
+                          style={{ backgroundColor: color }}
+                        >
+                          {isSelected && (
+                            <span className="block h-full w-full rounded-full border border-white/70" />
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
               </div>
-              <div className="grid grid-cols-8 gap-1">
-                {PRIMARY_COLORS.map((color) => {
-                  const isSelected = color === value;
-                  return (
-                    <button
-                      key={color}
-                      type="button"
-                      onClick={() => onChange(color)}
-                      className={`h-6 w-6 rounded-full border transition-transform ${isSelected
-                          ? "border-sky-600 ring-2 ring-sky-300 scale-105"
-                          : "border-slate-200 hover:scale-105"
-                        }`}
-                      style={{ backgroundColor: color }}
-                    >
-                      {isSelected && (
-                        <span className="block h-full w-full rounded-full border border-white/70" />
-                      )}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          );
-        };
+            );
+          };
 
       // ---------- Meta Editor ----------
       const ChallengeMetaEditor = ({ meta, onChange, onGenerateDays }) => {
