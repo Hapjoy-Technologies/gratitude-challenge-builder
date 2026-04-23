@@ -76,7 +76,7 @@ export const defaultChallengeMetaV1 = {
   ],
   carouselCards: [
     {
-      title: "Opening Reflections",
+      title: "Opening Reflection",
       subtitle: "Begin with gentle awareness of your inner world.",
       bgColor: "#E9CFE3",
       illusUrl:
