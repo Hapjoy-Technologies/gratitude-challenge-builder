@@ -12,10 +12,10 @@ export default function HomeScreen({
     <div className="max-w-5xl mx-auto h-[calc(100vh-112px)] flex flex-col">
       <div className="flex items-center justify-between mb-4">
         <div>
-          <h2 className="text-base font-semibold text-slate-800">
+          <h2 className="text-base font-semibold text-[#211036]">
             Your Generated Challenges
           </h2>
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-[#868484]">
             Select a challenge to edit or export, or start a new one.
           </p>
         </div>
@@ -23,24 +23,24 @@ export default function HomeScreen({
       </div>
 
       {loading && (
-        <div className="flex-1 flex items-center justify-center text-sm text-slate-500">
+        <div className="flex-1 flex items-center justify-center text-sm text-[#868484]">
           Loading challenges...
         </div>
       )}
 
       {!loading && error && (
-        <div className="mb-4 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+        <div className="mb-4 rounded-xl border border-[#F9C9D6] bg-[#FDE8EE] px-3 py-2 text-sm text-[#211036]">
           Failed to load challenges: {error}
         </div>
       )}
 
       {!loading && !error && challenges.length === 0 && (
-        <div className="flex-1 flex flex-col items-center justify-center text-sm text-slate-500">
+        <div className="flex-1 flex flex-col items-center justify-center text-sm text-[#868484]">
           <p>No challenges found yet.</p>
           <button
             type="button"
             onClick={onNewChallenge}
-            className="mt-3 text-xs font-medium text-sky-600 hover:underline"
+            className="mt-3 text-xs font-semibold text-[#FE678B] hover:text-[#ED6082] hover:underline"
           >
             Create your first challenge →
           </button>
@@ -65,38 +65,38 @@ export default function HomeScreen({
               return (
                 <div
                   key={ch.challengeId}
-                  className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm flex flex-col justify-between"
+                  className="rounded-3xl border border-[#E6F4F9] bg-white p-4 shadow-[0_4px_16px_rgba(43,0,98,0.06)] flex flex-col justify-between"
                 >
                   <div>
                     <div className="flex items-start justify-between mb-1">
-                      <h3 className="text-sm font-semibold text-slate-800">
+                      <h3 className="text-sm font-semibold text-[#211036]">
                         {title}
                       </h3>
                       <div className="flex gap-1">
                         {hasV1 && (
-                          <span className="inline-flex items-center rounded-full bg-slate-100 px-1.5 py-0.5 text-[10px] font-medium text-slate-600">
+                          <span className="inline-flex items-center rounded-full bg-[#F0FCFF] px-1.5 py-0.5 text-[10px] font-medium text-[#868484]">
                             V1
                           </span>
                         )}
                         {hasV2 && (
-                          <span className="inline-flex items-center rounded-full bg-sky-100 px-1.5 py-0.5 text-[10px] font-medium text-sky-700">
+                          <span className="inline-flex items-center rounded-full bg-[#F9EAFF] px-1.5 py-0.5 text-[10px] font-medium text-[#2B0062]">
                             V2
                           </span>
                         )}
                       </div>
                     </div>
-                    <p className="text-xs text-slate-500 mb-3 break-all">
+                    <p className="text-xs text-[#868484] mb-3 break-all">
                       ID:{" "}
-                      <span className="font-mono text-slate-600">
+                      <span className="font-mono text-[#3D3D3D]">
                         {ch.challengeId}
                       </span>
                     </p>
-                    <div className="flex flex-wrap gap-2 text-[11px] text-slate-600">
-                      <span className="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5">
+                    <div className="flex flex-wrap gap-2 text-[11px] text-[#3D3D3D]">
+                      <span className="inline-flex items-center rounded-full bg-[#F0FCFF] px-2 py-0.5">
                         Duration:{" "}
                         <span className="ml-1 font-medium">{duration} days</span>
                       </span>
-                      <span className="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5">
+                      <span className="inline-flex items-center rounded-full bg-[#F0FCFF] px-2 py-0.5">
                         Start:{" "}
                         <span className="ml-1 font-medium">{startDate}</span>
                       </span>

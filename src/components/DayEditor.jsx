@@ -11,7 +11,7 @@ import {
 export default function DayEditor({ day, index, onChange }) {
   if (!day) {
     return (
-      <div className="h-full flex items-center justify-center text-sm text-slate-400">
+      <div className="h-full flex items-center justify-center text-sm text-[#A8A3B0]">
         Select or create a day to start editing.
       </div>
     );
@@ -62,13 +62,13 @@ export default function DayEditor({ day, index, onChange }) {
     <div className="h-full overflow-y-auto space-y-5 pr-2">
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-xs uppercase tracking-wide text-slate-400">Editing</p>
-          <h1 className="text-lg font-semibold text-slate-800">
+          <p className="text-xs uppercase tracking-wide text-[#A8A3B0]">Editing</p>
+          <h1 className="text-lg font-semibold text-[#211036]">
             {day.title}{" "}
-            <span className="text-xs font-normal text-slate-400">({day.dayId})</span>
+            <span className="text-xs font-normal text-[#A8A3B0]">({day.dayId})</span>
           </h1>
         </div>
-        <span className="text-xs text-slate-400">Day index: {index + 1}</span>
+        <span className="text-xs text-[#A8A3B0]">Day index: {index + 1}</span>
       </div>
 
       <div>
@@ -156,23 +156,23 @@ export default function DayEditor({ day, index, onChange }) {
 
       <div>
         <SectionTitle>Examples</SectionTitle>
-        <p className="text-[11px] text-slate-500 mb-2">
+        <p className="text-[11px] text-[#868484] mb-2">
           These sample responses guide the tone and depth for this day.
         </p>
         <div className="space-y-3">
           {day.examples.map((ex, i) => (
             <div
               key={i}
-              className="rounded-lg border border-slate-200 bg-white p-2.5 shadow-sm"
+              className="rounded-lg border border-[#E6F4F9] bg-white p-2.5 shadow-[0_2px_8px_rgba(43,0,98,0.04)]"
             >
               <div className="flex items-center justify-between mb-1">
-                <span className="text-[11px] font-medium text-slate-500">
+                <span className="text-[11px] font-medium text-[#868484]">
                   Example {i + 1}
                 </span>
                 <button
                   type="button"
                   onClick={() => removeExample(i)}
-                  className="text-[11px] text-slate-400 hover:text-red-500"
+                  className="text-[11px] text-[#A8A3B0] hover:text-[#FF05B9]"
                 >
                   Remove
                 </button>
@@ -192,20 +192,20 @@ export default function DayEditor({ day, index, onChange }) {
 
       <div>
         <SectionTitle>Pointers (Optional)</SectionTitle>
-        <p className="text-[11px] text-slate-500 mb-2">
+        <p className="text-[11px] text-[#868484] mb-2">
           Short hints or reminders users can see before writing.
         </p>
         <div className="space-y-2">
           {day.pointers.map((p, i) => (
             <div key={i} className="flex items-start space-x-2">
-              <span className="mt-1 text-xs text-slate-400">{i + 1}.</span>
+              <span className="mt-1 text-xs text-[#A8A3B0]">{i + 1}.</span>
               <div className="flex-1">
                 <TextInput value={p} onChange={(v) => updatePointer(i, v)} />
               </div>
               <button
                 type="button"
                 onClick={() => removePointer(i)}
-                className="mt-1 text-xs text-slate-400 hover:text-red-500"
+                className="mt-1 text-xs text-[#A8A3B0] hover:text-[#FF05B9]"
               >
                 ✕
               </button>

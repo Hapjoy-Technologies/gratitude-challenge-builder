@@ -229,7 +229,7 @@ export default function ChallengeMetaEditor({ meta, onChange, onGenerateDays }) 
         <div className="space-y-2">
           {meta.instructions.map((inst, idx) => (
             <div key={idx} className="flex items-start space-x-2">
-              <span className="mt-1 text-xs text-slate-400">{idx + 1}.</span>
+              <span className="mt-1 text-xs text-[#A8A3B0]">{idx + 1}.</span>
               <div className="flex-1">
                 <TextInput
                   value={inst}
@@ -239,7 +239,7 @@ export default function ChallengeMetaEditor({ meta, onChange, onGenerateDays }) 
               <button
                 type="button"
                 onClick={() => removeInstruction(idx)}
-                className="mt-1 text-xs text-slate-400 hover:text-red-500"
+                className="mt-1 text-xs text-[#A8A3B0] hover:text-[#FF05B9]"
               >
                 ✕
               </button>
@@ -257,16 +257,16 @@ export default function ChallengeMetaEditor({ meta, onChange, onGenerateDays }) 
           {meta.carouselCards.map((card, idx) => (
             <div
               key={idx}
-              className="rounded-xl border border-slate-200 bg-white p-3 shadow-sm"
+              className="rounded-xl border border-[#E6F4F9] bg-white p-3 shadow-[0_2px_8px_rgba(43,0,98,0.04)]"
             >
               <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-semibold text-slate-500">
+                <span className="text-xs font-semibold text-[#868484]">
                   Card {idx + 1}
                 </span>
                 <button
                   type="button"
                   onClick={() => removeCarouselCard(idx)}
-                  className="text-xs text-slate-400 hover:text-red-500"
+                  className="text-xs text-[#A8A3B0] hover:text-[#FF05B9]"
                 >
                   Remove
                 </button>

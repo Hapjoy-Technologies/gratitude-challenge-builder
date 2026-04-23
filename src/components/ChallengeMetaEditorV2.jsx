@@ -92,7 +92,7 @@ export default function ChallengeMetaEditorV2({ meta, onChange }) {
           </div>
         </div>
         <div
-          className="mt-3 rounded-xl p-3 text-sm border border-slate-200"
+          className="mt-3 rounded-xl p-3 text-sm border border-[#E6F4F9]"
           style={{
             backgroundColor: meta.theme?.background?.light || "#ffffff",
             color: meta.theme?.text?.light || "#000000"
@@ -101,7 +101,7 @@ export default function ChallengeMetaEditorV2({ meta, onChange }) {
           Light preview — {meta.title || "Title"}
         </div>
         <div
-          className="mt-2 rounded-xl p-3 text-sm border border-slate-200"
+          className="mt-2 rounded-xl p-3 text-sm border border-[#E6F4F9]"
           style={{
             backgroundColor: meta.theme?.background?.dark || "#000000",
             color: meta.theme?.text?.dark || "#ffffff"

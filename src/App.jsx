@@ -150,7 +150,7 @@ export default function App() {
   };
 
   const SegmentedToggle = () => (
-    <div className="inline-flex rounded-full border border-slate-200 bg-slate-100 p-0.5 text-[11px] font-medium">
+    <div className="inline-flex rounded-full border border-[#E3DCEA] bg-[#F9EAFF] p-0.5 text-[11px] font-medium">
       {["v1", "v2"].map((v) => (
         <button
           key={v}
@@ -158,8 +158,8 @@ export default function App() {
           onClick={() => setMetaVersion(v)}
           className={`rounded-full px-2.5 py-0.5 transition ${
             metaVersion === v
-              ? "bg-white text-slate-800 shadow-sm"
-              : "text-slate-500 hover:text-slate-700"
+              ? "bg-[#FE678B] text-white shadow-sm"
+              : "text-[#2B0062] hover:text-[#FE678B]"
           }`}
         >
           {v.toUpperCase()}
@@ -169,29 +169,29 @@ export default function App() {
   );
 
   return (
-    <div className="min-h-screen bg-slate-100">
-      <header className="border-b border-slate-200 bg-white">
+    <div className="min-h-screen bg-[#F0FCFF]">
+      <header className="border-b border-[#E6F4F9] bg-white">
         <div className="mx-auto max-w-7xl px-4 py-3 flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <div className="h-8 w-8 rounded-xl bg-sky-500 text-white flex items-center justify-center text-sm font-bold">
+            <div className="h-8 w-8 rounded-2xl bg-[#FE678B] text-white flex items-center justify-center text-sm font-bold">
               G
             </div>
             <div>
-              <h1 className="text-sm font-semibold text-slate-800">
+              <h1 className="text-sm font-semibold text-[#211036]">
                 Gratitude Challenge Builder
               </h1>
-              <p className="text-[11px] text-slate-500">
+              <p className="text-[11px] text-[#868484]">
                 Create and export JSON for in-app challenges.
               </p>
             </div>
           </div>
 
-          <div className="flex items-center space-x-2 text-[11px] text-slate-500">
+          <div className="flex items-center space-x-2 text-[11px] text-[#868484]">
             {view === "editor" && (
               <>
                 <span>
                   Challenge ID:{" "}
-                  <span className="font-mono text-slate-700">
+                  <span className="font-mono text-[#262626]">
                     {metaV1.challengeId}
                   </span>
                 </span>
@@ -222,7 +222,7 @@ export default function App() {
           />
         ) : (
           <div className="grid grid-cols-12 gap-4 h-[calc(100vh-96px)]">
-            <section className="col-span-3 rounded-2xl bg-white p-3 shadow-sm border border-slate-200 flex flex-col">
+            <section className="col-span-3 rounded-3xl bg-white p-3 shadow-[0_4px_16px_rgba(43,0,98,0.06)] border border-[#E6F4F9] flex flex-col">
               {metaVersion === "v2" ? (
                 <ChallengeMetaEditorV2 meta={metaV2} onChange={setMetaV2} />
               ) : (
@@ -234,9 +234,9 @@ export default function App() {
               )}
             </section>
 
-            <section className="col-span-5 rounded-2xl bg-white p-3 shadow-sm border border-slate-200 flex flex-col">
+            <section className="col-span-5 rounded-3xl bg-white p-3 shadow-[0_4px_16px_rgba(43,0,98,0.06)] border border-[#E6F4F9] flex flex-col">
               <div className="grid grid-cols-3 gap-3 h-full">
-                <div className="col-span-1 border-r border-slate-100 pr-2">
+                <div className="col-span-1 border-r border-[#E6F4F9] pr-2">
                   <DayList
                     days={days}
                     selectedIndex={selectedDayIndex}
@@ -255,7 +255,7 @@ export default function App() {
               </div>
             </section>
 
-            <section className="col-span-4 rounded-2xl bg-white p-3 shadow-sm border border-slate-200 flex flex-col">
+            <section className="col-span-4 rounded-3xl bg-white p-3 shadow-[0_4px_16px_rgba(43,0,98,0.06)] border border-[#E6F4F9] flex flex-col">
               <JsonPreview
                 metaV1={metaV1}
                 metaV2={metaV2}

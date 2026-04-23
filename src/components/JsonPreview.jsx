@@ -49,7 +49,7 @@ export default function JsonPreview({ metaV1, metaV2, metaVersion, days }) {
         </div>
       </div>
       <div className="flex items-center justify-between mb-2">
-        <p className="text-[11px] text-slate-500">
+        <p className="text-[11px] text-[#868484]">
           Copy and paste into your JSON config.
         </p>
         <PillButton
@@ -60,7 +60,7 @@ export default function JsonPreview({ metaV1, metaV2, metaVersion, days }) {
         </PillButton>
       </div>
       <div className="flex-1 overflow-hidden">
-        <pre className="h-full w-full overflow-auto rounded-xl bg-slate-900 p-3 text-[11px] text-slate-100 shadow-inner">
+        <pre className="h-full w-full overflow-auto rounded-xl bg-[#211036] p-3 text-[11px] text-[#F0FCFF] shadow-inner">
           {tab === "meta" ? metaJson : daysJson}
         </pre>
       </div>
