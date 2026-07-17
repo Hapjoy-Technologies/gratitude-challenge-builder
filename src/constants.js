@@ -2,6 +2,7 @@ export const API_BASE =
   "https://pl5xaf0r80.execute-api.us-east-1.amazonaws.com/prod";
 export const API_GET_CHALLENGES = `${API_BASE}/getgeneratedchallenges`;
 export const API_SAVE_CHALLENGE = `${API_BASE}/savegeneratedchallenge`;
+export const API_DELETE_CHALLENGE = `${API_BASE}/deletegeneratedchallenge`;
 
 export const PRIMARY_COLORS = [
   "#FAFFD4",

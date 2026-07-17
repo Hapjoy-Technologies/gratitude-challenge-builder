@@ -33,6 +33,13 @@ export const createEmptyDay = (challengeId, index) => {
 export const generateDays = (challengeId, duration) =>
   Array.from({ length: duration }, (_, i) => createEmptyDay(challengeId, i));
 
+export const restampDays = (days) =>
+  days.map((day, i) => ({
+    ...day,
+    dayId: `Day ${padDay(i + 1)}`,
+    daySinceJoining: i
+  }));
+
 export const normalizeChallengeDays = (challengeDays) => {
   if (Array.isArray(challengeDays)) return challengeDays;
   if (challengeDays && Array.isArray(challengeDays.challengeDays)) {

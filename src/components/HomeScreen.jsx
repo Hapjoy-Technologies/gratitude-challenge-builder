@@ -6,7 +6,9 @@ export default function HomeScreen({
   loading,
   error,
   onNewChallenge,
-  onEditChallenge
+  onEditChallenge,
+  onDuplicateChallenge,
+  onDeleteChallenge
 }) {
   return (
     <div className="max-w-5xl mx-auto h-[calc(100vh-112px)] flex flex-col">
@@ -104,14 +106,28 @@ export default function HomeScreen({
                   </div>
 
                   <div className="mt-4 flex items-center justify-between">
-                    <PillButton onClick={() => onEditChallenge(ch)}>
-                      Edit
-                    </PillButton>
+                    <div className="flex items-center gap-1">
+                      <PillButton onClick={() => onEditChallenge(ch)}>
+                        Edit
+                      </PillButton>
+                      <PillButton
+                        variant="ghost"
+                        onClick={() => onDuplicateChallenge(ch)}
+                      >
+                        Duplicate
+                      </PillButton>
+                      <PillButton
+                        variant="ghost"
+                        onClick={() => exportChallengeJson(ch)}
+                      >
+                        Export
+                      </PillButton>
+                    </div>
                     <PillButton
-                      variant="ghost"
-                      onClick={() => exportChallengeJson(ch)}
+                      variant="danger"
+                      onClick={() => onDeleteChallenge(ch)}
                     >
-                      Export JSON
+                      Delete
                     </PillButton>
                   </div>
                 </div>

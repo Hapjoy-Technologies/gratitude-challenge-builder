@@ -64,7 +64,9 @@ export const PillButton = ({ children, onClick, variant = "primary" }) => {
       ? "bg-[#FE678B] text-white hover:bg-[#ED6082]"
       : variant === "ghost"
         ? "bg-transparent text-[#2B0062] hover:bg-[#F9EAFF]"
-        : "bg-[#F9EAFF] text-[#2B0062] hover:bg-[#F0E1FA]";
+        : variant === "danger"
+          ? "bg-transparent text-[#D93A5C] hover:bg-[#FDE8EE]"
+          : "bg-[#F9EAFF] text-[#2B0062] hover:bg-[#F0E1FA]";
   return (
     <button type="button" onClick={onClick} className={`${base} ${styles}`}>
       {children}

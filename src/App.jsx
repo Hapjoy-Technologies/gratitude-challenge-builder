@@ -9,9 +9,10 @@ import {
   padDay,
   normalizeChallengeDays,
   createNewChallengePair,
-  seedV2FromId
+  seedV2FromId,
+  restampDays
 } from "./utils.js";
-import { fetchChallenges, saveChallenge } from "./api.js";
+import { fetchChallenges, saveChallenge, deleteChallenge } from "./api.js";
 import { PillButton } from "./components/ui.jsx";
 import ChallengeMetaEditor from "./components/ChallengeMetaEditor.jsx";
 import ChallengeMetaEditorV2 from "./components/ChallengeMetaEditorV2.jsx";
@@ -57,7 +58,36 @@ export default function App() {
     load();
   }, []);
 
+  // The challenge ID lives in three places (metaV1.challengeId, metaV2.id,
+  // each day's challengeId) — these wrappers keep them in sync whichever
+  // editor the change comes from.
+  const handleMetaV1Change = (next) => {
+    if (next.challengeId !== metaV1.challengeId) {
+      setMetaV2((prev) => ({ ...prev, id: next.challengeId }));
+      setDays((prev) =>
+        prev.map((d) => ({ ...d, challengeId: next.challengeId }))
+      );
+    }
+    setMetaV1(next);
+  };
+
+  const handleMetaV2Change = (next) => {
+    if (next.id !== metaV2.id) {
+      setMetaV1((prev) => ({ ...prev, challengeId: next.id }));
+      setDays((prev) => prev.map((d) => ({ ...d, challengeId: next.id })));
+    }
+    setMetaV2(next);
+  };
+
   const handleGenerateDays = (challengeId, duration) => {
+    if (
+      days.length > 0 &&
+      !window.confirm(
+        `Regenerate ${duration} days from scratch? All existing day content will be replaced.`
+      )
+    ) {
+      return;
+    }
     setDays(generateDays(challengeId, duration));
     setSelectedDayIndex(0);
   };
@@ -65,7 +95,63 @@ export default function App() {
   const handleAddDay = () => {
     const idx = days.length;
     setDays([...days, createEmptyDay(metaV1.challengeId, idx)]);
+    setMetaV1((prev) => ({ ...prev, duration: idx + 1 }));
     setSelectedDayIndex(idx);
+  };
+
+  const handleDeleteDay = (index) => {
+    const day = days[index];
+    if (
+      !window.confirm(
+        `Delete ${day?.dayId || `Day ${index + 1}`}? Its content will be lost.`
+      )
+    ) {
+      return;
+    }
+    const newDays = restampDays(days.filter((_, i) => i !== index));
+    setDays(newDays);
+    setMetaV1((prev) => ({ ...prev, duration: newDays.length }));
+    setSelectedDayIndex((prev) => {
+      const shifted = prev > index ? prev - 1 : prev;
+      return Math.max(0, Math.min(shifted, newDays.length - 1));
+    });
+  };
+
+  const handleMoveDay = (index, direction) => {
+    const target = index + direction;
+    if (target < 0 || target >= days.length) return;
+    const newDays = [...days];
+    [newDays[index], newDays[target]] = [newDays[target], newDays[index]];
+    setDays(restampDays(newDays));
+    if (selectedDayIndex === index) setSelectedDayIndex(target);
+    else if (selectedDayIndex === target) setSelectedDayIndex(index);
+  };
+
+  // Grows the list with empty days or trims it from the end (with a
+  // confirmation), preserving existing content — unlike Generate, which
+  // rebuilds every day. Works in both V1 and V2 modes.
+  const handleSetDayCount = (count) => {
+    const n = Math.floor(Number(count));
+    if (!Number.isFinite(n) || n < 1 || n === days.length) return;
+    if (n < days.length) {
+      if (
+        !window.confirm(
+          `Remove the last ${days.length - n} day(s)? Their content will be lost.`
+        )
+      ) {
+        return;
+      }
+      setDays(days.slice(0, n));
+    } else {
+      setDays([
+        ...days,
+        ...Array.from({ length: n - days.length }, (_, i) =>
+          createEmptyDay(metaV1.challengeId, days.length + i)
+        )
+      ]);
+    }
+    setMetaV1((prev) => ({ ...prev, duration: n }));
+    setSelectedDayIndex((prev) => Math.min(prev, n - 1));
   };
 
   const handleUpdateDay = (updatedDay) => {
@@ -116,6 +202,66 @@ export default function App() {
     setSelectedDayIndex(0);
     setMetaVersion("v2");
     setView("editor");
+  };
+
+  const handleDuplicateChallenge = (challenge) => {
+    const sourceId = challenge.challengeId;
+    const input = window.prompt(
+      "Enter an ID for the duplicated challenge:",
+      `${sourceId}Copy`
+    );
+    if (input == null) return;
+    const newId = input.trim();
+    if (!newId) return;
+    if (challenges.some((c) => c.challengeId === newId)) {
+      alert(`A challenge with the ID "${newId}" already exists.`);
+      return;
+    }
+
+    const source = JSON.parse(JSON.stringify(challenge));
+    const srcV1 = source.challengeMeta || {
+      ...defaultChallengeMetaV1,
+      challengeId: sourceId
+    };
+    const srcV2 =
+      source.challengeMetaV2 || seedV2FromId(sourceId, srcV1.title || "");
+    const srcDays = normalizeChallengeDays(source.challengeDays);
+
+    const copyTitle = srcV1.title ? `${srcV1.title} (Copy)` : "New Challenge";
+    setMetaV1({ ...srcV1, challengeId: newId, title: copyTitle });
+    setMetaV2({
+      ...srcV2,
+      id: newId,
+      title: srcV2.title ? `${srcV2.title} (Copy)` : copyTitle
+    });
+    setDays(
+      srcDays.length > 0
+        ? srcDays.map((d) => ({ ...d, challengeId: newId }))
+        : generateDays(newId, srcV1.duration || defaultChallengeMetaV1.duration)
+    );
+    setSelectedDayIndex(0);
+    setMetaVersion("v2");
+    setView("editor");
+  };
+
+  const handleDeleteChallenge = async (challenge) => {
+    const id = challenge.challengeId;
+    const title =
+      challenge.challengeMetaV2?.title || challenge.challengeMeta?.title || id;
+    if (
+      !window.confirm(
+        `Delete "${title}" (${id}) permanently? This cannot be undone.`
+      )
+    ) {
+      return;
+    }
+    try {
+      await deleteChallenge(id);
+      setChallenges((prev) => prev.filter((c) => c.challengeId !== id));
+    } catch (err) {
+      console.error("Delete failed", err);
+      alert("Failed to delete challenge. Please try again.");
+    }
   };
 
   const handleSaveChallenge = async () => {
@@ -219,16 +365,21 @@ export default function App() {
             error={challengesError}
             onNewChallenge={handleNewChallenge}
             onEditChallenge={handleEditExistingChallenge}
+            onDuplicateChallenge={handleDuplicateChallenge}
+            onDeleteChallenge={handleDeleteChallenge}
           />
         ) : (
           <div className="grid grid-cols-12 gap-4 h-[calc(100vh-96px)]">
             <section className="col-span-3 rounded-3xl bg-white p-3 shadow-[0_4px_16px_rgba(43,0,98,0.06)] border border-[#E6F4F9] flex flex-col">
               {metaVersion === "v2" ? (
-                <ChallengeMetaEditorV2 meta={metaV2} onChange={setMetaV2} />
+                <ChallengeMetaEditorV2
+                  meta={metaV2}
+                  onChange={handleMetaV2Change}
+                />
               ) : (
                 <ChallengeMetaEditor
                   meta={metaV1}
-                  onChange={setMetaV1}
+                  onChange={handleMetaV1Change}
                   onGenerateDays={handleGenerateDays}
                 />
               )}
@@ -242,7 +393,9 @@ export default function App() {
                     selectedIndex={selectedDayIndex}
                     onSelect={setSelectedDayIndex}
                     onAddDay={handleAddDay}
-                    duration={metaV1.duration}
+                    onDeleteDay={handleDeleteDay}
+                    onMoveDay={handleMoveDay}
+                    onSetDayCount={handleSetDayCount}
                   />
                 </div>
                 <div className="col-span-2 pl-2">
