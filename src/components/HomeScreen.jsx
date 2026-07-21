@@ -1,5 +1,10 @@
 import { PillButton } from "./ui.jsx";
-import { normalizeChallengeDays, exportChallengeJson } from "../utils.js";
+import {
+  normalizeChallengeDays,
+  exportChallengeJson,
+  getChallengeStartDate,
+  sortChallengesByStartDateDesc
+} from "../utils.js";
 
 export default function HomeScreen({
   challenges,
@@ -52,15 +57,14 @@ export default function HomeScreen({
       {!loading && !error && challenges.length > 0 && (
         <div className="flex-1 overflow-y-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pb-4">
-            {challenges.map((ch) => {
+            {sortChallengesByStartDateDesc(challenges).map((ch) => {
               const metaV1 = ch.challengeMeta || {};
               const metaV2 = ch.challengeMetaV2 || null;
               const days = normalizeChallengeDays(ch.challengeDays);
               const title =
                 metaV2?.title || metaV1.title || ch.challengeId || "Untitled Challenge";
               const duration = days.length || metaV1.duration || 0;
-              const startDate =
-                metaV2?.visibility?.startDate || metaV1.startDate || "—";
+              const startDate = getChallengeStartDate(ch) || "—";
               const hasV1 = !!ch.challengeMeta;
               const hasV2 = !!ch.challengeMetaV2;
 

@@ -40,6 +40,23 @@ export const restampDays = (days) =>
     daySinceJoining: i
   }));
 
+export const getChallengeStartDate = (challenge) => {
+  const metaV1 = challenge.challengeMeta || {};
+  const metaV2 = challenge.challengeMetaV2 || null;
+  return metaV2?.visibility?.startDate || metaV1.startDate || "";
+};
+
+// Newest start date first; challenges without a start date sort to the bottom.
+export const sortChallengesByStartDateDesc = (challenges) =>
+  [...challenges].sort((a, b) => {
+    const da = getChallengeStartDate(a);
+    const db = getChallengeStartDate(b);
+    if (da === db) return 0;
+    if (!da) return 1;
+    if (!db) return -1;
+    return db.localeCompare(da);
+  });
+
 export const normalizeChallengeDays = (challengeDays) => {
   if (Array.isArray(challengeDays)) return challengeDays;
   if (challengeDays && Array.isArray(challengeDays.challengeDays)) {
